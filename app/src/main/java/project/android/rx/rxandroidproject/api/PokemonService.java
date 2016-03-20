@@ -10,6 +10,9 @@ import rx.Observable;
  */
 public interface PokemonService {
 
-    @GET("pokmeon/{id}")
+    @GET("api/v2/pokemon/{id}")
     Observable<Pokemon> getPokemon(@Path("id") int id);
+
+    @GET("api/v2/pokemon/{name}")
+    Observable<Pokemon> getPokemon(@Path("name") String name);
 }

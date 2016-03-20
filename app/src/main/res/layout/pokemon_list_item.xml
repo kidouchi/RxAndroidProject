@@ -1,0 +1,26 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+              xmlns:tools="http://schemas.android.com/tools"
+              android:orientation="horizontal"
+              android:layout_width="match_parent"
+              android:gravity="center_vertical"
+              android:weightSum="3"
+              android:layout_height="96dp">
+
+    <ImageView
+        android:id="@+id/pokemon_sprite_image_view"
+        android:layout_width="96dp"
+        android:layout_height="wrap_content"
+        android:layout_weight="1"
+        tools:src="@drawable/squirtle"
+        />
+
+    <TextView
+        android:layout_weight="2"
+        android:id="@+id/pokemon_name_text_view"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textSize="18sp"
+        tools:text="Squirtle"/>
+
+</LinearLayout>

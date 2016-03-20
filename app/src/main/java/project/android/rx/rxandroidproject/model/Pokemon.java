@@ -16,6 +16,9 @@ public class Pokemon {
     @Expose
     private String name;
 
+    @SerializedName("sprites")
+    @Expose
+    private Sprites sprites;
 
     public int getId() {
         return id;
@@ -43,4 +46,11 @@ public class Pokemon {
         return this;
     }
 
+    public Sprites getSprites() {
+        return sprites;
+    }
+
+    public void setSprites(Sprites sprites) {
+        this.sprites = sprites;
+    }
 }
