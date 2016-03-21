@@ -46,7 +46,7 @@ public class PokemonListViewAdapter extends ArrayAdapter<Pokemon> {
             viewHolder = (ViewHolder) convertView.getTag();
         }
 
-        viewHolder.name.setText(pokemon.getName());
+        viewHolder.name.setText(pokemon.getName().toUpperCase());
         // Retrieve image url
         Glide.with(getContext())
                 .load(pokemon.getSprites().getFrontDefault())

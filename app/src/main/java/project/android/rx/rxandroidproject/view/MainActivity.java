@@ -5,9 +5,11 @@ import android.support.v7.app.AppCompatActivity;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.util.Log;
+import android.view.View;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
 import android.widget.ListView;
+import android.widget.ProgressBar;
 
 import java.util.ArrayList;
 
@@ -24,6 +26,7 @@ public class MainActivity extends AppCompatActivity {
     private AutoCompleteTextView mPokemonSearchBar;
     private ListView mPokemonSearchResults;
     private PokemonListViewAdapter mPokemonListViewAdapter;
+    private ProgressBar mProgressBar;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -32,6 +35,7 @@ public class MainActivity extends AppCompatActivity {
 
         buildSearchAutocompleteBar();
         buildPokemonListView();
+        mProgressBar = (ProgressBar) findViewById(R.id.pokemon_search_progress_bar);
     }
 
     public void retrievePokemons(String query) {
@@ -39,6 +43,7 @@ public class MainActivity extends AppCompatActivity {
                 .getPokemon(query.toLowerCase())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
+                .doOnRequest(aLong -> mProgressBar.setVisibility(View.VISIBLE))
                 .subscribe(new Subscriber<Pokemon>() {
                     @Override
                     public void onCompleted() {
@@ -53,6 +58,7 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Pokemon pokemon) {
+                        mProgressBar.setVisibility(View.GONE);
                         Log.d("Pokemon", pokemon.getSprites().getFrontDefault());
                         mPokemonListViewAdapter.add(pokemon);
                         mPokemonListViewAdapter.notifyDataSetChanged();
