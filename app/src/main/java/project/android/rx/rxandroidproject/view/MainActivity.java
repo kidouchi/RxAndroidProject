@@ -7,8 +7,12 @@ import android.text.TextWatcher;
 import android.util.Log;
 import android.widget.ArrayAdapter;
 import android.widget.AutoCompleteTextView;
+import android.widget.ListView;
+
+import java.util.ArrayList;
 
 import project.android.rx.rxandroidproject.R;
+import project.android.rx.rxandroidproject.adapter.PokemonListViewAdapter;
 import project.android.rx.rxandroidproject.api.PokemonApi;
 import project.android.rx.rxandroidproject.model.Pokemon;
 import rx.Subscriber;
@@ -18,6 +22,8 @@ import rx.schedulers.Schedulers;
 public class MainActivity extends AppCompatActivity {
 
     private AutoCompleteTextView mPokemonSearchBar;
+    private ListView mPokemonSearchResults;
+    private PokemonListViewAdapter mPokemonListViewAdapter;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -25,15 +31,18 @@ public class MainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_main);
 
         buildSearchAutocompleteBar();
+        buildPokemonListView();
+    }
 
+    public void retrievePokemons(String query) {
         PokemonApi.getApi()
-                .getPokemon("charmander")
+                .getPokemon(query.toLowerCase())
                 .subscribeOn(Schedulers.io())
                 .observeOn(AndroidSchedulers.mainThread())
                 .subscribe(new Subscriber<Pokemon>() {
                     @Override
                     public void onCompleted() {
-
+                        Log.d("Pokemon", "DONE");
                     }
 
                     @Override
@@ -44,9 +53,17 @@ public class MainActivity extends AppCompatActivity {
 
                     @Override
                     public void onNext(Pokemon pokemon) {
-                         Log.d("Pokemon", pokemon.getSprites().getFrontDefault());
+                        Log.d("Pokemon", pokemon.getSprites().getFrontDefault());
+                        mPokemonListViewAdapter.add(pokemon);
+                        mPokemonListViewAdapter.notifyDataSetChanged();
                     }
                 });
+    }
+
+    public void buildPokemonListView() {
+        mPokemonSearchResults = (ListView) findViewById(R.id.pokemon_search_results);
+        mPokemonListViewAdapter = new PokemonListViewAdapter(this, new ArrayList<Pokemon>());
+        mPokemonSearchResults.setAdapter(mPokemonListViewAdapter);
     }
 
     public void buildSearchAutocompleteBar() {
@@ -56,10 +73,18 @@ public class MainActivity extends AppCompatActivity {
         ArrayAdapter<String> adapter = new ArrayAdapter<String>(this,
                 android.R.layout.select_dialog_item, pokemonNames);
 
+        // Set character threshold before starting autocomplete
+
+        mPokemonSearchBar.setThreshold(2);
         mPokemonSearchBar.setAdapter(adapter);
         mPokemonSearchBar.setOnItemClickListener((parent, view, position, id) -> {
             Log.i("Chose", adapter.getItem(position));
+            retrievePokemons(adapter.getItem(position));
+
+            adapter.notifyDataSetChanged();
         });
+
+//        RxAutoCompleteTextView.completionHint(mPokemonSearchBar).
 
         mPokemonSearchBar.addTextChangedListener(new TextWatcher() {
             @Override
@@ -69,7 +94,8 @@ public class MainActivity extends AppCompatActivity {
 
             @Override
             public void onTextChanged(CharSequence s, int start, int before, int count) {
-
+                mPokemonListViewAdapter.clear();
+                mPokemonListViewAdapter.notifyDataSetChanged();
             }
 
             @Override

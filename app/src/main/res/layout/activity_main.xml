@@ -18,4 +18,12 @@
         android:layout_width="match_parent"
         android:layout_height="50dp"/>
 
+    <ListView
+        android:id="@+id/pokemon_search_results"
+        android:layout_below="@+id/pokemon_search_bar"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent">
+
+    </ListView>
+
 </RelativeLayout>

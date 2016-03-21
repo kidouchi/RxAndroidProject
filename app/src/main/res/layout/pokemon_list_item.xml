@@ -3,6 +3,8 @@
               xmlns:tools="http://schemas.android.com/tools"
               android:orientation="horizontal"
               android:layout_width="match_parent"
+              android:layout_margin="@dimen/activity_horizontal_margin"
+              android:elevation="8dp"
               android:gravity="center_vertical"
               android:weightSum="3"
               android:layout_height="96dp">
