@@ -38,6 +38,7 @@ public class MainActivity extends AppCompatActivity {
         mProgressBar = (ProgressBar) findViewById(R.id.pokemon_search_progress_bar);
     }
 
+    // TODO: gMove to separate file
     public void retrievePokemons(String query) {
         PokemonApi.getApi()
                 .getPokemon(query.toLowerCase())
